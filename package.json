@@ -1,0 +1,21 @@
+{
+  "name": "chat_app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix BACKEND && npm install --prefix FRONTEND && npm run build --prefix FRONTEND",
+    "start": "npm run start --prefix BACKEND"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krispatel2612/CHAT_APP.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krispatel2612/CHAT_APP/issues"
+  },
+  "homepage": "https://github.com/krispatel2612/CHAT_APP#readme",
+  "description": ""
+}
