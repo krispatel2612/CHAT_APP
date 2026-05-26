@@ -1,0 +1,23 @@
+$kind: http-request
+name: Get Contacts
+method: GET
+url: '{{baseUrl}}/api/message/contacts'
+order: 1000
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      const jwt = pm.collectionVariables.get("jwt");
+      if (!jwt) {
+          console.warn("No JWT found. Run the Login request first, or set the 'email' and 'password' collection variables.");
+      } else {
+          pm.request.headers.add({ key: "Cookie", value: "jwt=" + jwt });
+      }
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Get contacts successful", () => pm.response.to.have.status(200));
+      pm.test("Response is an array", () => {
+          const body = pm.response.json();
+          pm.expect(body).to.be.an("array");
+      });

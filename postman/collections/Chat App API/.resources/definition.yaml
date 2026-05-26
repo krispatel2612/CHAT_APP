@@ -1,0 +1,40 @@
+$kind: collection
+name: Chat App API
+variables:
+  - key: baseUrl
+    value: 'http://localhost:3000'
+  - key: email
+    value: ''
+  - key: password
+    value: ''
+  - key: jwt
+    value: ''
+scripts:
+  - type: http:beforeRequest
+    language: text/javascript
+    code: |-
+      const jwt = pm.collectionVariables.get("jwt");
+      if (!jwt) {
+          pm.sendRequest({
+              url: pm.collectionVariables.get("baseUrl") + "/api/auth/login",
+              method: "POST",
+              header: { "Content-Type": "application/json" },
+              body: {
+                  mode: "raw",
+                  raw: JSON.stringify({
+                      email: pm.collectionVariables.get("email"),
+                      password: pm.collectionVariables.get("password")
+                  })
+              }
+          }, function (err, res) {
+              if (!err && res.code === 200) {
+                  const cookies = res.headers.get("set-cookie");
+                  if (cookies) {
+                      const match = cookies.match(/jwt=([^;]+)/);
+                      if (match) {
+                          pm.collectionVariables.set("jwt", match[1]);
+                      }
+                  }
+              }
+          });
+      }

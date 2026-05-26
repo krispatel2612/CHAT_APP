@@ -1,0 +1,29 @@
+$kind: http-request
+name: Login
+method: POST
+url: '{{baseUrl}}/api/auth/login'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{email}}",
+      "password": "{{password}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      if (pm.response.code === 200) {
+          const cookies = pm.response.headers.get("set-cookie");
+          if (cookies) {
+              const match = cookies.match(/jwt=([^;]+)/);
+              if (match) {
+                  pm.collectionVariables.set("jwt", match[1]);
+              }
+          }
+          pm.test("Login successful", () => pm.response.to.have.status(200));
+      }
